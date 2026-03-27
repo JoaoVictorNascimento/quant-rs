@@ -15,7 +15,7 @@ Simple return measures the percentage change between two consecutive prices. The
 
 ## Mathematical Formula
 
-<p align="center"><img src="https://latex.codecogs.com/svg.image?R_t=\frac{P_t}{P_{t-1}}-1" alt="R_t = P_t / P_{t-1} - 1" /></p>
+<p align="center"><img src="https://latex.codecogs.com/svg.image?\color{white}R_t%3D%5Cfrac%7BP_t%7D%7BP_%7Bt-1%7D%7D-1" alt="R_t = P_t / P_{t-1} - 1" /></p>
 
 Where:
 
@@ -57,7 +57,7 @@ Log return (continuously compounded return) is the natural logarithm of the pric
 
 ## Mathematical Formula
 
-<p align="center"><img src="https://latex.codecogs.com/svg.image?r_t=\ln\frac{P_t}{P_{t-1}}" alt="r_t = ln(P_t / P_{t-1})" /></p>
+<p align="center"><img src="https://latex.codecogs.com/svg.image?\color{white}r_t%3D%5Cln%5Cfrac%7BP_t%7D%7BP_%7Bt-1%7D%7D" alt="r_t = ln(P_t / P_{t-1})" /></p>
 
 Equivalently: **ln(P<sub>t</sub>) − ln(P<sub>t−1</sub>)** (same expression).
 
@@ -100,7 +100,7 @@ Cumulative simple return from the first price in the series to the last, using o
 
 ## Mathematical Formula
 
-<p align="center"><img src="https://latex.codecogs.com/svg.image?R=\frac{P_n}{P_0}-1" alt="Cumulative simple return" /></p>
+<p align="center"><img src="https://latex.codecogs.com/svg.image?\color{white}R%3D%5Cfrac%7BP_n%7D%7BP_0%7D-1" alt="Cumulative simple return" /></p>
 
 Where:
 
@@ -141,7 +141,7 @@ Natural logarithm of the total growth factor from the first to the last price—
 
 ## Mathematical Formula
 
-<p align="center"><img src="https://latex.codecogs.com/svg.image?r=\ln\frac{P_n}{P_0}" alt="Cumulative log return" /></p>
+<p align="center"><img src="https://latex.codecogs.com/svg.image?\color{white}r%3D%5Cln%5Cfrac%7BP_n%7D%7BP_0%7D" alt="Cumulative log return" /></p>
 
 Where:
 
@@ -183,7 +183,7 @@ Chains period simple returns by compounding: multiply gross returns (1 + Rᵢ) f
 
 ## Mathematical Formula
 
-<p align="center"><img src="https://latex.codecogs.com/svg.image?R=\prod_{i}\left(1+R_i\right)-1" alt="Compounded return from period returns" /></p>
+<p align="center"><img src="https://latex.codecogs.com/svg.image?\color{white}R%3D%5Cprod_%7Bi%7D%5Cleft(1%2BR_i%5Cright)-1" alt="Compounded return from period returns" /></p>
 
 Where:
 
