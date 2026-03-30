@@ -2,6 +2,7 @@ use quant_rs::core::QuantError;
 use quant_rs::metrics::returns::{
     cumulative_from_returns, cumulative_log_return, cumulative_return, log_returns, simple_returns,
 };
+use quant_rs::metrics::sharpe::{annualized_sharpe_ratio, sharpe_ratio};
 use quant_rs::metrics::volatility::{annualized_volatility, variance, volatility};
 
 fn assert_approx_eq(a: f64, b: f64) {
@@ -216,7 +217,7 @@ fn volatility_equals_sqrt_variance() {
 
 #[test]
 fn volatility_constant_returns_is_zero() {
-    assert_approx_eq(volatility(&[0.05, 0.05, 0.05]).unwrap(), 0.0);
+    assert_approx_eq(volatility(&[1.0, 1.0, 1.0]).unwrap(), 0.0);
 }
 
 #[test]
@@ -295,6 +296,146 @@ fn annualized_volatility_propagates_insufficient_data() {
 fn annualized_volatility_propagates_invalid_values() {
     assert!(matches!(
         annualized_volatility(&[0.1, f64::NAN], 252.0),
+        Err(QuantError::InvalidValue(_))
+    ));
+}
+
+// ── sharpe_ratio ──────────────────────────────────────────────────────────────
+
+#[test]
+fn sharpe_ratio_zero_risk_free() {
+    // mean = 0.2, vol = 0.1  →  sharpe = 2.0
+    assert_approx_eq(sharpe_ratio(&[0.1, 0.2, 0.3], 0.0).unwrap(), 2.0);
+}
+
+#[test]
+fn sharpe_ratio_nonzero_risk_free() {
+    // mean = 0.2, vol = 0.1, rf = 0.1  →  sharpe = 1.0
+    assert_approx_eq(sharpe_ratio(&[0.1, 0.2, 0.3], 0.1).unwrap(), 1.0);
+}
+
+#[test]
+fn sharpe_ratio_negative() {
+    // mean < risk_free → negative sharpe
+    let r = &[0.01, 0.02, 0.03];
+    let mean = 0.02_f64;
+    let vol = volatility(r).unwrap();
+    let expected = (mean - 0.1) / vol;
+    assert_approx_eq(sharpe_ratio(r, 0.1).unwrap(), expected);
+}
+
+#[test]
+fn sharpe_ratio_consistent_with_formula() {
+    let returns = &[0.05, -0.02, 0.08, 0.01, -0.03];
+    let n = returns.len() as f64;
+    let mean = returns.iter().sum::<f64>() / n;
+    let vol = volatility(returns).unwrap();
+    let risk_free = 0.02;
+    assert_approx_eq(
+        sharpe_ratio(returns, risk_free).unwrap(),
+        (mean - risk_free) / vol,
+    );
+}
+
+#[test]
+fn sharpe_ratio_constant_returns_is_division_by_zero() {
+    // 0.0 é exatamente representável em f64, garantindo vol == 0.0 sem erro de arredondamento
+    assert!(matches!(
+        sharpe_ratio(&[0.0, 0.0, 0.0], 0.0),
+        Err(QuantError::DivisionByZero)
+    ));
+    assert!(matches!(
+        sharpe_ratio(&[1.0, 1.0, 1.0], 0.0),
+        Err(QuantError::DivisionByZero)
+    ));
+}
+
+#[test]
+fn sharpe_ratio_insufficient_data() {
+    assert!(matches!(
+        sharpe_ratio(&[0.1], 0.0),
+        Err(QuantError::InsufficientData)
+    ));
+    assert!(matches!(
+        sharpe_ratio(&[], 0.0),
+        Err(QuantError::InsufficientData)
+    ));
+}
+
+#[test]
+fn sharpe_ratio_invalid_values() {
+    assert!(matches!(
+        sharpe_ratio(&[0.1, f64::NAN], 0.0),
+        Err(QuantError::InvalidValue(_))
+    ));
+    assert!(matches!(
+        sharpe_ratio(&[f64::INFINITY, 0.1], 0.0),
+        Err(QuantError::InvalidValue(_))
+    ));
+}
+
+// ── annualized_sharpe_ratio ───────────────────────────────────────────────────
+
+#[test]
+fn annualized_sharpe_ratio_daily_to_annual() {
+    let returns = &[0.1, 0.2, 0.3];
+    let sharpe = sharpe_ratio(returns, 0.0).unwrap();
+    let ann = annualized_sharpe_ratio(returns, 0.0, 252.0).unwrap();
+    assert_approx_eq(ann, sharpe * 252.0_f64.sqrt());
+}
+
+#[test]
+fn annualized_sharpe_ratio_monthly_to_annual() {
+    let returns = &[0.03, -0.01, 0.05, -0.02, 0.04];
+    let sharpe = sharpe_ratio(returns, 0.01).unwrap();
+    let ann = annualized_sharpe_ratio(returns, 0.01, 12.0).unwrap();
+    assert_approx_eq(ann, sharpe * 12.0_f64.sqrt());
+}
+
+#[test]
+fn annualized_sharpe_ratio_one_period_equals_sharpe() {
+    let returns = &[0.1, 0.2, 0.3];
+    let sharpe = sharpe_ratio(returns, 0.0).unwrap();
+    let ann = annualized_sharpe_ratio(returns, 0.0, 1.0).unwrap();
+    assert_approx_eq(ann, sharpe);
+}
+
+#[test]
+fn annualized_sharpe_ratio_zero_periods_is_error() {
+    assert!(matches!(
+        annualized_sharpe_ratio(&[0.1, 0.2], 0.0, 0.0),
+        Err(QuantError::InvalidValue(_))
+    ));
+}
+
+#[test]
+fn annualized_sharpe_ratio_negative_periods_is_error() {
+    assert!(matches!(
+        annualized_sharpe_ratio(&[0.1, 0.2], 0.0, -252.0),
+        Err(QuantError::InvalidValue(_))
+    ));
+}
+
+#[test]
+fn annualized_sharpe_ratio_propagates_insufficient_data() {
+    assert!(matches!(
+        annualized_sharpe_ratio(&[0.1], 0.0, 252.0),
+        Err(QuantError::InsufficientData)
+    ));
+}
+
+#[test]
+fn annualized_sharpe_ratio_propagates_division_by_zero() {
+    assert!(matches!(
+        annualized_sharpe_ratio(&[1.0, 1.0, 1.0], 0.0, 252.0),
+        Err(QuantError::DivisionByZero)
+    ));
+}
+
+#[test]
+fn annualized_sharpe_ratio_propagates_invalid_values() {
+    assert!(matches!(
+        annualized_sharpe_ratio(&[0.1, f64::NAN], 0.0, 252.0),
         Err(QuantError::InvalidValue(_))
     ));
 }
