@@ -4,4 +4,5 @@ pub enum QuantError {
     NonPositivePrice(f64),
     ZeroPrice,
     InvalidValue(f64),
+    DivisionByZero,
 }
