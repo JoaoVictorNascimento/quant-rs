@@ -4,6 +4,7 @@ use quant_rs::metrics::returns::{
 };
 use quant_rs::metrics::drawdown::{drawdowns, max_drawdown, max_drawdown_duration};
 use quant_rs::metrics::sharpe::{annualized_sharpe_ratio, sharpe_ratio};
+use quant_rs::metrics::sortino::sortino_ratio;
 use quant_rs::metrics::volatility::{annualized_volatility, variance, volatility};
 
 fn assert_approx_eq(a: f64, b: f64) {
@@ -305,19 +306,16 @@ fn annualized_volatility_propagates_invalid_values() {
 
 #[test]
 fn sharpe_ratio_zero_risk_free() {
-    // mean = 0.2, vol = 0.1  →  sharpe = 2.0
     assert_approx_eq(sharpe_ratio(&[0.1, 0.2, 0.3], 0.0).unwrap(), 2.0);
 }
 
 #[test]
 fn sharpe_ratio_nonzero_risk_free() {
-    // mean = 0.2, vol = 0.1, rf = 0.1  →  sharpe = 1.0
     assert_approx_eq(sharpe_ratio(&[0.1, 0.2, 0.3], 0.1).unwrap(), 1.0);
 }
 
 #[test]
 fn sharpe_ratio_negative() {
-    // mean < risk_free → negative sharpe
     let r = &[0.01, 0.02, 0.03];
     let mean = 0.02_f64;
     let vol = volatility(r).unwrap();
@@ -340,7 +338,6 @@ fn sharpe_ratio_consistent_with_formula() {
 
 #[test]
 fn sharpe_ratio_constant_returns_is_division_by_zero() {
-    // 0.0 é exatamente representável em f64, garantindo vol == 0.0 sem erro de arredondamento
     assert!(matches!(
         sharpe_ratio(&[0.0, 0.0, 0.0], 0.0),
         Err(QuantError::DivisionByZero)
@@ -464,7 +461,6 @@ fn drawdowns_length_matches_input() {
 
 #[test]
 fn drawdowns_all_increasing() {
-    // nenhum preço fica abaixo do pico → todos os drawdowns são 0.0
     let dd = drawdowns(&[100.0, 110.0, 120.0]).unwrap();
     for d in &dd {
         assert_approx_eq(*d, 0.0);
@@ -473,7 +469,6 @@ fn drawdowns_all_increasing() {
 
 #[test]
 fn drawdowns_simple_drop() {
-    // pico = 100, cai para 80 → dd = 80/100 - 1 = -0.2
     let dd = drawdowns(&[100.0, 80.0]).unwrap();
     assert_approx_eq(dd[0], 0.0);
     assert_approx_eq(dd[1], 80.0 / 100.0 - 1.0);
@@ -481,7 +476,6 @@ fn drawdowns_simple_drop() {
 
 #[test]
 fn drawdowns_new_peak_resets_reference() {
-    // [100, 120, 90]: pico sobe para 120; dd de 90 = 90/120 - 1 = -0.25
     let dd = drawdowns(&[100.0, 120.0, 90.0]).unwrap();
     assert_approx_eq(dd[0], 0.0);
     assert_approx_eq(dd[1], 0.0);
@@ -490,7 +484,6 @@ fn drawdowns_new_peak_resets_reference() {
 
 #[test]
 fn drawdowns_full_recovery() {
-    // [100, 80, 100]: recupera o pico → último dd = 0.0
     let dd = drawdowns(&[100.0, 80.0, 100.0]).unwrap();
     assert_approx_eq(dd[0], 0.0);
     assert_approx_eq(dd[1], 80.0 / 100.0 - 1.0);
@@ -535,19 +528,16 @@ fn max_drawdown_single_price() {
 
 #[test]
 fn max_drawdown_no_drawdown() {
-    // série monotonamente crescente → sem drawdown
     assert_approx_eq(max_drawdown(&[100.0, 110.0, 120.0]).unwrap(), 0.0);
 }
 
 #[test]
 fn max_drawdown_simple() {
-    // pico = 100, mínimo = 80 → mdd = -0.2
     assert_approx_eq(max_drawdown(&[100.0, 80.0]).unwrap(), 80.0 / 100.0 - 1.0);
 }
 
 #[test]
 fn max_drawdown_picks_worst_drop() {
-    // [100, 80, 90, 60]: drops de -0.2, -0.1, -0.4 → pior é -0.4
     assert_approx_eq(
         max_drawdown(&[100.0, 80.0, 90.0, 60.0]).unwrap(),
         60.0 / 100.0 - 1.0,
@@ -556,7 +546,6 @@ fn max_drawdown_picks_worst_drop() {
 
 #[test]
 fn max_drawdown_new_peak_then_drop() {
-    // [100, 150, 120]: pico sobe para 150; pior dd = 120/150 - 1 = -0.2
     assert_approx_eq(
         max_drawdown(&[100.0, 150.0, 120.0]).unwrap(),
         120.0 / 150.0 - 1.0,
@@ -609,19 +598,16 @@ fn max_drawdown_duration_single_price() {
 
 #[test]
 fn max_drawdown_duration_no_drawdown() {
-    // série crescente → nunca fica abaixo do pico
     assert_eq!(max_drawdown_duration(&[100.0, 110.0, 120.0]).unwrap(), 0);
 }
 
 #[test]
 fn max_drawdown_duration_one_period() {
-    // [100, 90]: 1 período abaixo do pico
     assert_eq!(max_drawdown_duration(&[100.0, 90.0]).unwrap(), 1);
 }
 
 #[test]
 fn max_drawdown_duration_consecutive_drops() {
-    // [100, 90, 80, 70]: 3 períodos consecutivos abaixo do pico
     assert_eq!(
         max_drawdown_duration(&[100.0, 90.0, 80.0, 70.0]).unwrap(),
         3
@@ -630,7 +616,6 @@ fn max_drawdown_duration_consecutive_drops() {
 
 #[test]
 fn max_drawdown_duration_recovery_resets_counter() {
-    // [100, 90, 100, 90]: dois drawdowns de 1 período cada → max = 1
     assert_eq!(
         max_drawdown_duration(&[100.0, 90.0, 100.0, 90.0]).unwrap(),
         1
@@ -639,7 +624,6 @@ fn max_drawdown_duration_recovery_resets_counter() {
 
 #[test]
 fn max_drawdown_duration_longer_second_drawdown_wins() {
-    // [100, 90, 100, 80, 70]: primeiro dd = 1, segundo dd = 2 → max = 2
     assert_eq!(
         max_drawdown_duration(&[100.0, 90.0, 100.0, 80.0, 70.0]).unwrap(),
         2
@@ -648,8 +632,6 @@ fn max_drawdown_duration_longer_second_drawdown_wins() {
 
 #[test]
 fn max_drawdown_duration_new_peak_resets_reference() {
-    // [100, 80, 120, 100]: pico sobe para 120; duração do primeiro dd = 1,
-    // depois nova queda de 100 < 120 também = 1 → max = 1
     assert_eq!(
         max_drawdown_duration(&[100.0, 80.0, 120.0, 100.0]).unwrap(),
         1
@@ -658,7 +640,6 @@ fn max_drawdown_duration_new_peak_resets_reference() {
 
 #[test]
 fn max_drawdown_duration_exact_peak_price_resets() {
-    // preço igual ao pico (price >= peak) deve resetar o contador
     assert_eq!(
         max_drawdown_duration(&[100.0, 80.0, 100.0]).unwrap(),
         1
@@ -691,4 +672,78 @@ fn max_drawdown_duration_non_positive_price() {
         max_drawdown_duration(&[100.0, -10.0]),
         Err(QuantError::NonPositivePrice(_))
     ));
+}
+
+// ── sortino_ratio ─────────────────────────────────────────────────────────────
+
+#[test]
+fn sortino_ratio_zero_risk_free() {
+    assert_approx_eq(sortino_ratio(&[0.1, 0.2, -0.1], 0.0).unwrap(), 2.0 / 3.0);
+}
+
+#[test]
+fn sortino_ratio_nonzero_risk_free() {
+    assert_approx_eq(
+        sortino_ratio(&[0.1, 0.2, 0.05], 0.08).unwrap(),
+        11.0 / 9.0,
+    );
+}
+
+#[test]
+fn sortino_ratio_consistent_with_formula() {
+    let returns = [0.08, -0.04, 0.03, -0.01, 0.12];
+    let risk_free = 0.02;
+
+    let mean = returns.iter().sum::<f64>() / returns.len() as f64;
+    let downside: Vec<f64> = returns
+        .iter()
+        .copied()
+        .filter(|&r| r < risk_free)
+        .map(|r| {
+            let d = r - risk_free;
+            d * d
+        })
+        .collect();
+    let downside_dev = (downside.iter().sum::<f64>() / downside.len() as f64).sqrt();
+    let expected = (mean - risk_free) / downside_dev;
+
+    assert_approx_eq(sortino_ratio(&returns, risk_free).unwrap(), expected);
+}
+
+#[test]
+fn sortino_ratio_negative_value() {
+    let ratio = sortino_ratio(&[-0.02, -0.01, 0.01], 0.02).unwrap();
+    assert!(ratio < 0.0);
+}
+
+#[test]
+fn sortino_ratio_insufficient_data() {
+    assert!(matches!(
+        sortino_ratio(&[0.1], 0.0),
+        Err(QuantError::InsufficientData)
+    ));
+    assert!(matches!(
+        sortino_ratio(&[], 0.0),
+        Err(QuantError::InsufficientData)
+    ));
+}
+
+#[test]
+fn sortino_ratio_invalid_values() {
+    assert!(matches!(
+        sortino_ratio(&[0.1, f64::NAN], 0.0),
+        Err(QuantError::InvalidValue(_))
+    ));
+    assert!(matches!(
+        sortino_ratio(&[f64::INFINITY, 0.1], 0.0),
+        Err(QuantError::InvalidValue(_))
+    ));
+}
+
+#[test]
+fn sortino_ratio_no_downside_is_division_by_zero() {
+    assert!(matches!(
+        sortino_ratio(&[0.02, 0.03, 0.04], 0.02),
+        Err(QuantError::DivisionByZero)
+        ));
 }
