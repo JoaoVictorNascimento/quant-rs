@@ -1,4 +1,5 @@
 use quant_rs::backtest::engine::BacktestEngine;
+use quant_rs::backtest::results::BacktestResult;
 use quant_rs::core::QuantError;
 use quant_rs::strategy::signal::Signal;
 
@@ -160,6 +161,199 @@ fn run_invalid_price_is_error() {
     ));
     assert!(matches!(
         BacktestEngine::run(&[100.0, f64::INFINITY], &signals),
+        Err(QuantError::InvalidValue(_))
+    ));
+}
+
+fn sample_backtest_result() -> BacktestResult {
+    BacktestResult {
+        strategy_returns: vec![0.1, -0.05, 0.02],
+        equity_curve: vec![1.0, 1.1, 1.045, 1.0659],
+        final_equity: 1.0659,
+    }
+}
+
+// ── backtest_result_len_is_empty ─────────────────────────────────────────────
+
+#[test]
+fn backtest_result_len_matches_strategy_returns() {
+    let result = sample_backtest_result();
+    assert_eq!(result.len(), 3);
+}
+
+#[test]
+fn backtest_result_is_empty_false_when_has_returns() {
+    let result = sample_backtest_result();
+    assert!(!result.is_empty());
+}
+
+#[test]
+fn backtest_result_is_empty_true_when_no_returns() {
+    let result = BacktestResult {
+        strategy_returns: vec![],
+        equity_curve: vec![1.0],
+        final_equity: 1.0,
+    };
+    assert!(result.is_empty());
+    assert_eq!(result.len(), 0);
+}
+
+// ── backtest_result_cumulative_return ────────────────────────────────────────
+
+#[test]
+fn backtest_result_cumulative_return_basic() {
+    let result = sample_backtest_result();
+    let expected = (1.1_f64 * 0.95 * 1.02) - 1.0;
+    assert_approx_eq(result.cumulative_return().unwrap(), expected);
+}
+
+#[test]
+fn backtest_result_cumulative_return_empty_is_error() {
+    let result = BacktestResult {
+        strategy_returns: vec![],
+        equity_curve: vec![1.0],
+        final_equity: 1.0,
+    };
+    assert!(matches!(
+        result.cumulative_return(),
+        Err(QuantError::InsufficientData)
+    ));
+}
+
+#[test]
+fn backtest_result_cumulative_return_invalid_value_is_error() {
+    let result = BacktestResult {
+        strategy_returns: vec![0.1, f64::NAN],
+        equity_curve: vec![1.0, 1.1, 1.0],
+        final_equity: 1.0,
+    };
+    assert!(matches!(
+        result.cumulative_return(),
+        Err(QuantError::InvalidValue(_))
+    ));
+}
+
+// ── backtest_result_volatility ───────────────────────────────────────────────
+
+#[test]
+fn backtest_result_volatility_basic() {
+    let result = sample_backtest_result();
+    let vol = result.volatility().unwrap();
+    assert!(vol > 0.0);
+}
+
+#[test]
+fn backtest_result_volatility_constant_returns_is_zero() {
+    let result = BacktestResult {
+        strategy_returns: vec![1.0, 1.0, 1.0],
+        equity_curve: vec![1.0, 2.0, 4.0, 8.0],
+        final_equity: 8.0,
+    };
+    assert_approx_eq(result.volatility().unwrap(), 0.0);
+}
+
+#[test]
+fn backtest_result_volatility_insufficient_data_is_error() {
+    let result = BacktestResult {
+        strategy_returns: vec![0.1],
+        equity_curve: vec![1.0, 1.1],
+        final_equity: 1.1,
+    };
+    assert!(matches!(result.volatility(), Err(QuantError::InsufficientData)));
+}
+
+#[test]
+fn backtest_result_volatility_invalid_value_is_error() {
+    let result = BacktestResult {
+        strategy_returns: vec![0.1, f64::INFINITY],
+        equity_curve: vec![1.0, 1.1, 1.1],
+        final_equity: 1.1,
+    };
+    assert!(matches!(
+        result.volatility(),
+        Err(QuantError::InvalidValue(_))
+    ));
+}
+
+// ── backtest_result_sharpe_ratio ─────────────────────────────────────────────
+
+#[test]
+fn backtest_result_sharpe_ratio_basic() {
+    let result = sample_backtest_result();
+    let ratio = result.sharpe_ratio(0.0).unwrap();
+    assert!(ratio.is_finite());
+}
+
+#[test]
+fn backtest_result_sharpe_ratio_constant_returns_is_division_by_zero() {
+    let result = BacktestResult {
+        strategy_returns: vec![1.0, 1.0, 1.0],
+        equity_curve: vec![1.0, 2.0, 4.0, 8.0],
+        final_equity: 8.0,
+    };
+    assert!(matches!(
+        result.sharpe_ratio(0.0),
+        Err(QuantError::DivisionByZero)
+    ));
+}
+
+#[test]
+fn backtest_result_sharpe_ratio_insufficient_data_is_error() {
+    let result = BacktestResult {
+        strategy_returns: vec![0.1],
+        equity_curve: vec![1.0, 1.1],
+        final_equity: 1.1,
+    };
+    assert!(matches!(
+        result.sharpe_ratio(0.0),
+        Err(QuantError::InsufficientData)
+    ));
+}
+
+// ── backtest_result_max_drawdown ─────────────────────────────────────────────
+
+#[test]
+fn backtest_result_max_drawdown_basic() {
+    let result = BacktestResult {
+        strategy_returns: vec![0.0, 0.0, 0.0],
+        equity_curve: vec![1.0, 1.2, 1.1, 1.3],
+        final_equity: 1.3,
+    };
+    assert_approx_eq(result.max_drawdown().unwrap(), 1.1 / 1.2 - 1.0);
+}
+
+#[test]
+fn backtest_result_max_drawdown_no_drawdown_is_zero() {
+    let result = BacktestResult {
+        strategy_returns: vec![0.1, 0.1],
+        equity_curve: vec![1.0, 1.1, 1.21],
+        final_equity: 1.21,
+    };
+    assert_approx_eq(result.max_drawdown().unwrap(), 0.0);
+}
+
+#[test]
+fn backtest_result_max_drawdown_empty_equity_curve_is_error() {
+    let result = BacktestResult {
+        strategy_returns: vec![0.1, -0.1],
+        equity_curve: vec![],
+        final_equity: 1.0,
+    };
+    assert!(matches!(
+        result.max_drawdown(),
+        Err(QuantError::InsufficientData)
+    ));
+}
+
+#[test]
+fn backtest_result_max_drawdown_invalid_value_is_error() {
+    let result = BacktestResult {
+        strategy_returns: vec![0.1, -0.1],
+        equity_curve: vec![1.0, f64::NAN, 0.9],
+        final_equity: 0.9,
+    };
+    assert!(matches!(
+        result.max_drawdown(),
         Err(QuantError::InvalidValue(_))
     ));
 }
