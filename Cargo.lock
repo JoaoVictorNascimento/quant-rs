@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "quant-rs"
+name = "quantix"
 version = "0.1.0"

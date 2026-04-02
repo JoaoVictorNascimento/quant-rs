@@ -1,8 +1,8 @@
-use quant_rs::core::QuantError;
-use quant_rs::strategy::moving_average::{
+use quantix::core::QuantError;
+use quantix::strategy::moving_average::{
     moving_average_crossover_signals, simple_moving_average,
 };
-use quant_rs::strategy::signal::Signal;
+use quantix::strategy::signal::Signal;
 
 fn assert_approx_eq(a: f64, b: f64) {
     let eps = 1e-12_f64.max(a.abs().max(b.abs()) * 1e-12);

@@ -41,7 +41,7 @@ Sharpe (risk-free = 0.1): (0.2 − 0.1) / 0.1 = **1.0**
 ## Code Example
 
 ```rust
-use quant_rs::metrics::sharpe::sharpe_ratio;
+use quantix::metrics::sharpe::sharpe_ratio;
 
 let returns = vec![0.1, 0.2, 0.3];
 
@@ -86,7 +86,7 @@ Annualized (252 trading days): 2.0 × √252 ≈ **31.75**
 ## Code Example
 
 ```rust
-use quant_rs::metrics::sharpe::{sharpe_ratio, annualized_sharpe_ratio};
+use quantix::metrics::sharpe::{sharpe_ratio, annualized_sharpe_ratio};
 
 let returns = vec![0.1, 0.2, 0.3];
 let sharpe = sharpe_ratio(&returns, 0.0).unwrap();

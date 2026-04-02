@@ -1,5 +1,5 @@
-use quant_rs::core::QuantError;
-use quant_rs::strategy::moving_average::{moving_average_crossover_signals, simple_moving_average};
+use quantix::core::QuantError;
+use quantix::strategy::moving_average::{moving_average_crossover_signals, simple_moving_average};
 
 fn run_simple_moving_average_example() -> Result<(), QuantError> {
     let prices = vec![100.0, 101.0, 102.0, 104.0, 103.0, 105.0, 106.0];

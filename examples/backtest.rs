@@ -1,8 +1,8 @@
-use quant_rs::backtest::engine::{BacktestEngine, BacktestResult as EngineBacktestResult};
-use quant_rs::backtest::results::BacktestResult as AnalyticsBacktestResult;
-use quant_rs::core::QuantError;
-use quant_rs::strategy::moving_average::moving_average_crossover_signals;
-use quant_rs::strategy::signal::Signal;
+use quantix::backtest::engine::{BacktestEngine, BacktestResult as EngineBacktestResult};
+use quantix::backtest::results::BacktestResult as AnalyticsBacktestResult;
+use quantix::core::QuantError;
+use quantix::strategy::moving_average::moving_average_crossover_signals;
+use quantix::strategy::signal::Signal;
 
 fn to_analytics_result(result: EngineBacktestResult) -> AnalyticsBacktestResult {
     AnalyticsBacktestResult {

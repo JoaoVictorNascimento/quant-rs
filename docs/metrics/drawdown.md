@@ -42,7 +42,7 @@ Prices:
 ## Code Example
 
 ```rust
-use quant_rs::metrics::drawdown::drawdowns;
+use quantix::metrics::drawdown::drawdowns;
 
 let prices = vec![100.0, 80.0, 120.0, 90.0];
 let dd = drawdowns(&prices).unwrap();
@@ -86,7 +86,7 @@ MDD = min([0.0, −0.20, −0.10, −0.40]) = **−0.40**
 ## Code Example
 
 ```rust
-use quant_rs::metrics::drawdown::max_drawdown;
+use quantix::metrics::drawdown::max_drawdown;
 
 let prices = vec![100.0, 80.0, 90.0, 60.0];
 let mdd = max_drawdown(&prices).unwrap();
@@ -131,7 +131,7 @@ For a series with two separate drawdowns:
 ## Code Example
 
 ```rust
-use quant_rs::metrics::drawdown::max_drawdown_duration;
+use quantix::metrics::drawdown::max_drawdown_duration;
 
 // Monotonically decreasing: 3 consecutive periods below peak
 let prices = vec![100.0, 90.0, 80.0, 70.0];

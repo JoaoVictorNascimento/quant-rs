@@ -42,7 +42,7 @@ Result: `[None, Some(105), Some(115)]`
 ## Code Example
 
 ```rust
-use quant_rs::strategy::moving_average::simple_moving_average;
+use quantix::strategy::moving_average::simple_moving_average;
 
 let prices = [100.0, 110.0, 120.0];
 let sma = simple_moving_average(&prices, 2).unwrap();
@@ -99,8 +99,8 @@ Result: `[Hold, Hold, Buy, Buy]`
 ## Code Example
 
 ```rust
-use quant_rs::strategy::moving_average::moving_average_crossover_signals;
-use quant_rs::strategy::signal::Signal;
+use quantix::strategy::moving_average::moving_average_crossover_signals;
+use quantix::strategy::signal::Signal;
 
 let prices = [100.0, 101.0, 102.0, 103.0];
 let signals = moving_average_crossover_signals(&prices, 2, 3).unwrap();

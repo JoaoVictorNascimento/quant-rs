@@ -1,6 +1,6 @@
-use quant_rs::core::QuantError;
-use quant_rs::portfolio::portfolio::{Portfolio, Position};
-use quant_rs::portfolio::position::Position as PortfolioPosition;
+use quantix::core::QuantError;
+use quantix::portfolio::portfolio::{Portfolio, Position};
+use quantix::portfolio::position::Position as PortfolioPosition;
 
 fn assert_approx_eq(a: f64, b: f64) {
     let eps = 1e-12_f64.max(a.abs().max(b.abs()) * 1e-12);

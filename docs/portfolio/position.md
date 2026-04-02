@@ -55,7 +55,7 @@ Invalid:
 ## Code Example
 
 ```rust
-use quant_rs::portfolio::position::Position;
+use quantix::portfolio::position::Position;
 
 let p = Position::new(0.5, vec![0.01, -0.02, 0.03]).unwrap();
 assert!((p.weight - 0.5).abs() < 1e-12);
@@ -92,7 +92,7 @@ If `returns = [0.01, 0.02, 0.03, 0.04]`, then `len() = 4`.
 ## Code Example
 
 ```rust
-use quant_rs::portfolio::position::Position;
+use quantix::portfolio::position::Position;
 
 let p = Position::new(1.0, vec![0.01, 0.02, 0.03, 0.04]).unwrap();
 assert_eq!(p.len(), 4);
@@ -121,7 +121,7 @@ For `Position::new(1.0, vec![0.01])`, `is_empty()` returns `false`.
 ## Code Example
 
 ```rust
-use quant_rs::portfolio::position::Position;
+use quantix::portfolio::position::Position;
 
 let p = Position::new(1.0, vec![0.01]).unwrap();
 assert!(!p.is_empty());

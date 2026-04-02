@@ -1,11 +1,11 @@
-use quant_rs::core::QuantError;
-use quant_rs::metrics::returns::{
+use quantix::core::QuantError;
+use quantix::metrics::returns::{
     cumulative_from_returns, cumulative_log_return, cumulative_return, log_returns, simple_returns,
 };
-use quant_rs::metrics::drawdown::{drawdowns, max_drawdown, max_drawdown_duration};
-use quant_rs::metrics::sharpe::{annualized_sharpe_ratio, sharpe_ratio};
-use quant_rs::metrics::sortino::sortino_ratio;
-use quant_rs::metrics::volatility::{annualized_volatility, variance, volatility};
+use quantix::metrics::drawdown::{drawdowns, max_drawdown, max_drawdown_duration};
+use quantix::metrics::sharpe::{annualized_sharpe_ratio, sharpe_ratio};
+use quantix::metrics::sortino::sortino_ratio;
+use quantix::metrics::volatility::{annualized_volatility, variance, volatility};
 
 fn assert_approx_eq(a: f64, b: f64) {
     let eps = 1e-12_f64.max(a.abs().max(b.abs()) * 1e-12);

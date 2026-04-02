@@ -1,6 +1,13 @@
 [package]
-name = "quant-rs"
+name = "quantix"
 version = "0.1.0"
 edition = "2024"
+
+description = "A Rust library for quantitative finance, portfolio analysis, strategies, and backtesting."
+readme = "README.md"
+license = "MIT"
+
+keywords = ["finance", "quant", "backtest", "portfolio", "trading"]
+categories = ["finance", "mathematics"]
 
 [dependencies]

@@ -38,7 +38,7 @@ If `strategy_returns = [0.1, -0.05, 0.02]`, then:
 ## Code Example
 
 ```rust
-use quant_rs::backtest::results::BacktestResult;
+use quantix::backtest::results::BacktestResult;
 
 let result = BacktestResult {
     strategy_returns: vec![0.1, -0.05, 0.02],
@@ -79,7 +79,7 @@ This is path-consistent performance aggregation: returns compound multiplicative
 ## Code Example
 
 ```rust
-use quant_rs::backtest::results::BacktestResult;
+use quantix::backtest::results::BacktestResult;
 
 let result = BacktestResult {
     strategy_returns: vec![0.1, -0.05, 0.02],
@@ -119,7 +119,7 @@ For constant returns `[1.0, 1.0, 1.0]`, volatility is exactly `0.0`.
 ## Code Example
 
 ```rust
-use quant_rs::backtest::results::BacktestResult;
+use quantix::backtest::results::BacktestResult;
 
 let result = BacktestResult {
     strategy_returns: vec![1.0, 1.0, 1.0],
@@ -159,7 +159,7 @@ With non-constant returns, the ratio is finite; with constant returns, `σ = 0` 
 ## Code Example
 
 ```rust
-use quant_rs::backtest::results::BacktestResult;
+use quantix::backtest::results::BacktestResult;
 
 let result = BacktestResult {
     strategy_returns: vec![0.1, -0.05, 0.02],
@@ -208,7 +208,7 @@ Worst drawdown occurs at `1.1` relative to prior peak `1.2`:
 ## Code Example
 
 ```rust
-use quant_rs::backtest::results::BacktestResult;
+use quantix::backtest::results::BacktestResult;
 
 let result = BacktestResult {
     strategy_returns: vec![0.0, 0.0, 0.0],

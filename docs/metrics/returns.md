@@ -39,7 +39,7 @@ Returns:
 ## Code Example
 
 ```rust
-use quant_rs::metrics::returns::simple_returns;
+use quantix::metrics::returns::simple_returns;
 
 let prices = vec![100.0, 110.0, 121.0];
 let r = simple_returns(&prices).unwrap();
@@ -82,7 +82,7 @@ Log returns:
 ## Code Example
 
 ```rust
-use quant_rs::metrics::returns::log_returns;
+use quantix::metrics::returns::log_returns;
 
 let prices = vec![100.0, 110.0];
 let r = log_returns(&prices).unwrap();
@@ -124,7 +124,7 @@ Cumulative return:
 ## Code Example
 
 ```rust
-use quant_rs::metrics::returns::cumulative_return;
+use quantix::metrics::returns::cumulative_return;
 
 let prices = vec![100.0, 110.0, 121.0];
 let r = cumulative_return(&prices).unwrap();
@@ -165,7 +165,7 @@ ln(121 / 100) = ln(1.21)
 ## Code Example
 
 ```rust
-use quant_rs::metrics::returns::cumulative_log_return;
+use quantix::metrics::returns::cumulative_log_return;
 
 let prices = vec![100.0, 121.0];
 let r = cumulative_log_return(&prices).unwrap();
@@ -206,7 +206,7 @@ Cumulative:
 ## Code Example
 
 ```rust
-use quant_rs::metrics::returns::cumulative_from_returns;
+use quantix::metrics::returns::cumulative_from_returns;
 
 let per_period = [0.1, 0.1];
 let total = cumulative_from_returns(&per_period).unwrap();

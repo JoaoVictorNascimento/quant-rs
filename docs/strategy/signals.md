@@ -38,7 +38,7 @@ For a trend-following model:
 ## Code Example
 
 ```rust
-use quant_rs::strategy::signal::Signal;
+use quantix::strategy::signal::Signal;
 
 let enter = Signal::Buy;
 let exit = Signal::Sell;

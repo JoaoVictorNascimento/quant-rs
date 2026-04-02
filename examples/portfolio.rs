@@ -1,6 +1,6 @@
-use quant_rs::core::QuantError;
-use quant_rs::portfolio::portfolio::{Portfolio, Position as PortfolioPosition};
-use quant_rs::portfolio::position::Position as ValidatedPosition;
+use quantix::core::QuantError;
+use quantix::portfolio::portfolio::{Portfolio, Position as PortfolioPosition};
+use quantix::portfolio::position::Position as ValidatedPosition;
 
 fn run_portfolio_returns_example() -> Result<(), QuantError> {
     let mut portfolio = Portfolio {

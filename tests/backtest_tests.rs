@@ -1,7 +1,7 @@
-use quant_rs::backtest::engine::BacktestEngine;
-use quant_rs::backtest::results::BacktestResult;
-use quant_rs::core::QuantError;
-use quant_rs::strategy::signal::Signal;
+use quantix::backtest::engine::BacktestEngine;
+use quantix::backtest::results::BacktestResult;
+use quantix::core::QuantError;
+use quantix::strategy::signal::Signal;
 
 fn assert_approx_eq(a: f64, b: f64) {
     let eps = 1e-12_f64.max(a.abs().max(b.abs()) * 1e-12);

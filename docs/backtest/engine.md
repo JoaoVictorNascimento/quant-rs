@@ -103,8 +103,8 @@ Final equity: `0.99`
 ## Code Example
 
 ```rust
-use quant_rs::backtest::engine::BacktestEngine;
-use quant_rs::strategy::signal::Signal;
+use quantix::backtest::engine::BacktestEngine;
+use quantix::strategy::signal::Signal;
 
 let prices = [100.0, 90.0, 99.0, 108.9];
 let signals = [Signal::Buy, Signal::Sell, Signal::Buy, Signal::Hold];

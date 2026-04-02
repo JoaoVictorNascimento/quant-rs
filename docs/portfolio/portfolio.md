@@ -51,7 +51,7 @@ Result: **[0.018, 0.008, 0.002]**
 ## Code Example
 
 ```rust
-use quant_rs::portfolio::portfolio::{Portfolio, Position};
+use quantix::portfolio::portfolio::{Portfolio, Position};
 
 let portfolio = Portfolio {
     positions: vec![
@@ -102,7 +102,7 @@ Sum: `0.5 + (-0.5) = 0.0`
 ## Code Example
 
 ```rust
-use quant_rs::portfolio::portfolio::{Portfolio, Position};
+use quantix::portfolio::portfolio::{Portfolio, Position};
 
 let portfolio = Portfolio {
     positions: vec![
@@ -143,7 +143,7 @@ Weights after: `[0.4, 0.6]` (sum = 1.0)
 ## Code Example
 
 ```rust
-use quant_rs::portfolio::portfolio::{Portfolio, Position};
+use quantix::portfolio::portfolio::{Portfolio, Position};
 
 let mut portfolio = Portfolio {
     positions: vec![

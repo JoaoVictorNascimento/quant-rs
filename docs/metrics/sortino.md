@@ -53,7 +53,7 @@ Sortino = 0.0667 / 0.1 = **2/3 ≈ 0.6667**
 ## Code Example
 
 ```rust
-use quant_rs::metrics::sortino::sortino_ratio;
+use quantix::metrics::sortino::sortino_ratio;
 
 let returns = vec![0.1, 0.2, -0.1];
 
@@ -72,7 +72,7 @@ Returns [0.1, 0.2, 0.05], risk-free = 0.08:
 - Sortino = (0.35/3 − 0.08) / 0.03 = **11/9 ≈ 1.2222**
 
 ```rust
-use quant_rs::metrics::sortino::sortino_ratio;
+use quantix::metrics::sortino::sortino_ratio;
 
 let returns = vec![0.1, 0.2, 0.05];
 let s = sortino_ratio(&returns, 0.08).unwrap();

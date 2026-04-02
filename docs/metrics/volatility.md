@@ -40,7 +40,7 @@ Variance = 2.0 / (3 − 1) = **1.0**
 ## Code Example
 
 ```rust
-use quant_rs::metrics::volatility::variance;
+use quantix::metrics::volatility::variance;
 
 let returns = vec![1.0, 2.0, 3.0];
 let var = variance(&returns).unwrap();
@@ -78,7 +78,7 @@ Variance = 1.0 → Volatility = √1.0 = **1.0**
 ## Code Example
 
 ```rust
-use quant_rs::metrics::volatility::volatility;
+use quantix::metrics::volatility::volatility;
 
 let returns = vec![1.0, 2.0, 3.0];
 let vol = volatility(&returns).unwrap();
@@ -119,7 +119,7 @@ Annualized (252 trading days): 0.14142 × √252 ≈ **2.245**
 ## Code Example
 
 ```rust
-use quant_rs::metrics::volatility::{volatility, annualized_volatility};
+use quantix::metrics::volatility::{volatility, annualized_volatility};
 
 let returns = vec![0.1, -0.1];
 let vol = volatility(&returns).unwrap();
