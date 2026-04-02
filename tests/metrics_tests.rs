@@ -1,8 +1,8 @@
 use quantix::core::QuantError;
+use quantix::metrics::drawdown::{drawdowns, max_drawdown, max_drawdown_duration};
 use quantix::metrics::returns::{
     cumulative_from_returns, cumulative_log_return, cumulative_return, log_returns, simple_returns,
 };
-use quantix::metrics::drawdown::{drawdowns, max_drawdown, max_drawdown_duration};
 use quantix::metrics::sharpe::{annualized_sharpe_ratio, sharpe_ratio};
 use quantix::metrics::sortino::sortino_ratio;
 use quantix::metrics::volatility::{annualized_volatility, variance, volatility};
@@ -39,7 +39,10 @@ fn simple_returns_insufficient_data() {
         simple_returns(&[100.0]),
         Err(QuantError::InsufficientData)
     ));
-    assert!(matches!(simple_returns(&[]), Err(QuantError::InsufficientData)));
+    assert!(matches!(
+        simple_returns(&[]),
+        Err(QuantError::InsufficientData)
+    ));
 }
 
 #[test]
@@ -187,7 +190,10 @@ fn variance_two_symmetric() {
 
 #[test]
 fn variance_insufficient_data() {
-    assert!(matches!(variance(&[0.1]), Err(QuantError::InsufficientData)));
+    assert!(matches!(
+        variance(&[0.1]),
+        Err(QuantError::InsufficientData)
+    ));
     assert!(matches!(variance(&[]), Err(QuantError::InsufficientData)));
 }
 
@@ -640,10 +646,7 @@ fn max_drawdown_duration_new_peak_resets_reference() {
 
 #[test]
 fn max_drawdown_duration_exact_peak_price_resets() {
-    assert_eq!(
-        max_drawdown_duration(&[100.0, 80.0, 100.0]).unwrap(),
-        1
-    );
+    assert_eq!(max_drawdown_duration(&[100.0, 80.0, 100.0]).unwrap(), 1);
 }
 
 #[test]
@@ -683,10 +686,7 @@ fn sortino_ratio_zero_risk_free() {
 
 #[test]
 fn sortino_ratio_nonzero_risk_free() {
-    assert_approx_eq(
-        sortino_ratio(&[0.1, 0.2, 0.05], 0.08).unwrap(),
-        11.0 / 9.0,
-    );
+    assert_approx_eq(sortino_ratio(&[0.1, 0.2, 0.05], 0.08).unwrap(), 11.0 / 9.0);
 }
 
 #[test]
@@ -745,5 +745,5 @@ fn sortino_ratio_no_downside_is_division_by_zero() {
     assert!(matches!(
         sortino_ratio(&[0.02, 0.03, 0.04], 0.02),
         Err(QuantError::DivisionByZero)
-        ));
+    ));
 }

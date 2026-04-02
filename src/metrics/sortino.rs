@@ -1,9 +1,6 @@
 use crate::core::QuantError;
 
-pub fn sortino_ratio(
-    returns: &[f64],
-    risk_free: f64,
-) -> Result<f64, QuantError> {
+pub fn sortino_ratio(returns: &[f64], risk_free: f64) -> Result<f64, QuantError> {
     let n = returns.len();
 
     if n < 2 {

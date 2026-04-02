@@ -50,10 +50,7 @@ fn run_moving_average_backtest() -> Result<(), QuantError> {
         analytics_result.cumulative_return()?
     );
     println!("Volatility: {:.6}", analytics_result.volatility()?);
-    println!(
-        "Sharpe (rf=0): {:.6}",
-        analytics_result.sharpe_ratio(0.0)?
-    );
+    println!("Sharpe (rf=0): {:.6}", analytics_result.sharpe_ratio(0.0)?);
     println!("Max drawdown: {:.6}", analytics_result.max_drawdown()?);
     println!();
 

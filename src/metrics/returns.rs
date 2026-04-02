@@ -1,5 +1,5 @@
-use crate::core::validation::validate_prices;
 use crate::core::QuantError;
+use crate::core::validation::validate_prices;
 
 pub fn simple_returns(prices: &[f64]) -> Result<Vec<f64>, QuantError> {
     validate_prices(prices)?;
@@ -15,7 +15,6 @@ pub fn simple_returns(prices: &[f64]) -> Result<Vec<f64>, QuantError> {
 
     Ok(returns)
 }
-
 
 pub fn log_returns(prices: &[f64]) -> Result<Vec<f64>, QuantError> {
     validate_prices(prices)?;

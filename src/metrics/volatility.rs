@@ -30,10 +30,7 @@ pub fn volatility(returns: &[f64]) -> Result<f64, QuantError> {
     Ok(var.sqrt())
 }
 
-pub fn annualized_volatility(
-    returns: &[f64],
-    periods_per_year: f64,
-) -> Result<f64, QuantError> {
+pub fn annualized_volatility(returns: &[f64], periods_per_year: f64) -> Result<f64, QuantError> {
     if periods_per_year <= 0.0 {
         return Err(QuantError::InvalidValue(periods_per_year));
     }

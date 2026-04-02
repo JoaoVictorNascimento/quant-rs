@@ -21,8 +21,14 @@ fn run_portfolio_returns_example() -> Result<(), QuantError> {
     println!("Portfolio period returns: {:?}", portfolio.returns()?);
 
     portfolio.normalize_weights()?;
-    println!("Weights sum after normalization: {:.6}", portfolio.weights_sum());
-    println!("Portfolio period returns (normalized): {:?}", portfolio.returns()?);
+    println!(
+        "Weights sum after normalization: {:.6}",
+        portfolio.weights_sum()
+    );
+    println!(
+        "Portfolio period returns (normalized): {:?}",
+        portfolio.returns()?
+    );
     println!();
 
     Ok(())

@@ -1,7 +1,5 @@
 use quantix::core::QuantError;
-use quantix::strategy::moving_average::{
-    moving_average_crossover_signals, simple_moving_average,
-};
+use quantix::strategy::moving_average::{moving_average_crossover_signals, simple_moving_average};
 use quantix::strategy::signal::Signal;
 
 fn assert_approx_eq(a: f64, b: f64) {
@@ -145,7 +143,10 @@ fn moving_average_crossover_sell_signal_when_short_below_long() {
 fn moving_average_crossover_hold_when_equal_averages() {
     let prices = [100.0, 100.0, 100.0, 100.0];
     let signals = moving_average_crossover_signals(&prices, 2, 3).unwrap();
-    assert_eq!(signals, vec![Signal::Hold, Signal::Hold, Signal::Hold, Signal::Hold]);
+    assert_eq!(
+        signals,
+        vec![Signal::Hold, Signal::Hold, Signal::Hold, Signal::Hold]
+    );
 }
 
 #[test]

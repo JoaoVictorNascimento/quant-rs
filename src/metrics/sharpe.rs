@@ -1,11 +1,7 @@
 use crate::core::QuantError;
 use crate::metrics::volatility::volatility;
 
-
-pub fn sharpe_ratio(
-    returns: &[f64],
-    risk_free: f64,
-) -> Result<f64, QuantError> {
+pub fn sharpe_ratio(returns: &[f64], risk_free: f64) -> Result<f64, QuantError> {
     let n = returns.len();
 
     if n < 2 {

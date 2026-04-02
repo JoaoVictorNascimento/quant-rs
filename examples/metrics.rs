@@ -20,7 +20,10 @@ fn run_returns_examples(prices: &[f64]) -> Result<(), QuantError> {
     println!("Log returns: {:?}", log);
     println!("Cumulative return (from prices): {:.6}", cum_price);
     println!("Cumulative log return: {:.6}", cum_log);
-    println!("Cumulative return (from simple returns): {:.6}", cum_from_simple);
+    println!(
+        "Cumulative return (from simple returns): {:.6}",
+        cum_from_simple
+    );
     println!();
 
     Ok(())

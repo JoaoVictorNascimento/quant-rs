@@ -1,5 +1,5 @@
-use crate::core::QuantError;
 use super::signal::Signal;
+use crate::core::QuantError;
 
 pub fn simple_moving_average(
     prices: &[f64],

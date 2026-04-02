@@ -259,7 +259,10 @@ fn backtest_result_volatility_insufficient_data_is_error() {
         equity_curve: vec![1.0, 1.1],
         final_equity: 1.1,
     };
-    assert!(matches!(result.volatility(), Err(QuantError::InsufficientData)));
+    assert!(matches!(
+        result.volatility(),
+        Err(QuantError::InsufficientData)
+    ));
 }
 
 #[test]
